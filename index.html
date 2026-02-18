@@ -95,60 +95,7 @@ function calculeazaSiDeseneaza() {
     ctx.fillText(" A", centru + x1 * unitate + 5, centru - y1 * unitate - 5);
     ctx.fillText(" B", centru + x2 * unitate + 5, centru - y2 * unitate - 5);
 }
-
-// Apelăm funcția o dată la început ca să nu fie ecranul gol
-calculeazaSiDeseneaza();
-</script>
-    <div class="container" style="margin-top: 20px;">
-    <h2>2. Ecuația Generală a unei Conice</h2>
-    <div class="input-group">
-        a11 <input type="number" id="a11" value="1"> 
-        a12 <input type="number" id="a12" value="0"> 
-        a22 <input type="number" id="a22" value="1"> <br>
-        a10 <input type="number" id="a10" value="0"> 
-        a20 <input type="number" id="a20" value="0"> 
-        a00 <input type="number" id="a00" value="-4">
-    </div>
-    <button onclick="clasificaConica()">Clasifică Conica</button>
-    <div id="rezultatConica"></div>
-</div>
-
 <script>
-function clasificaConica() {
-    // Preluăm coeficienții
-    let a11 = parseFloat(document.getElementById('a11').value);
-    let a12 = parseFloat(document.getElementById('a12').value); // Atenție: în formulă e 2*a12
-    let a22 = parseFloat(document.getElementById('a22').value);
-    let a10 = parseFloat(document.getElementById('a10').value);
-    let a20 = parseFloat(document.getElementById('a20').value);
-    let a00 = parseFloat(document.getElementById('a00').value);
-
-    // Invarianții metrici
-    let I = a11 + a22;
-    let delta_mic = a11 * a22 - a12 * a12; // Determinantul matricii pătratice
-    
-    // Determinantul mare (Delta) pentru conice
-    let Delta = a11 * (a22 * a00 - a20 * a20) - 
-                a12 * (a12 * a00 - a10 * a20) + 
-                a10 * (a12 * a20 - a10 * a22);
-
-    let tip = "";
-    if (Delta === 0) {
-        tip = "Conică degenerată (perechi de drepte)";
-    } else {
-        if (delta_mic > 0) tip = "Elipsă (sau cerc dacă a11=a22 și a12=0)";
-        else if (delta_mic < 0) tip = "Hiperbolă";
-        else tip = "Parabolă";
-    }
-
-    document.getElementById('rezultatConica').innerHTML = `
-        <strong>Delta (Δ):</strong> ${Delta.toFixed(2)} <br>
-        <strong>delta (δ):</strong> ${delta_mic.toFixed(2)} <br>
-        <strong>Tip:</strong> ${tip}
-    `;
-}
-</script>
-    
 
 </body>
 </html>
