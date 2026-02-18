@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculator Geometrie Analitica</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f9; }
+        .container { max-width: 500px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        input { width: 60px; margin: 5px; padding: 5px; }
+        button { padding: 10px 20px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; }
+        #rezultat { margin-top: 20px; font-weight: bold; color: #333; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>1. Ecuația Dreptei</h2>
+    <p>Introdu coordonatele punctelor:</p>
+    
+    A: x1 <input type="number" id="x1" value="1"> y1 <input type="number" id="y1" value="2"><br>
+    B: x2 <input type="number" id="x2" value="3"> y2 <input type="number" id="y2" value="5"><br><br>
+    
+    <button onclick="calculeazaDreapta()">Calculează Ecuația</button>
+
+    <div id="rezultat"></div>
+</div>
+
+<script>
+function calculeazaDreapta() {
+    // Luam valorile din input-uri
+    let x1 = parseFloat(document.getElementById('x1').value);
+    let y1 = parseFloat(document.getElementById('y1').value);
+    let x2 = parseFloat(document.getElementById('x2').value);
+    let y2 = parseFloat(document.getElementById('y2').value);
+
+    // Calculam coeficientii a, b, c conform formulei de mai sus
+    let a = y1 - y2;
+    let b = x2 - x1;
+    let c = x1 * y2 - x2 * y1;
+
+    // Formatam afisarea (sa nu apara +- daca e negativ)
+    let semnB = b >= 0 ? "+ " : "- ";
+    let semnC = c >= 0 ? "+ " : "- ";
+
+    document.getElementById('rezultat').innerHTML = 
+        `Ecuația dreptei este: ${a}x ${semnB}${Math.abs(b)}y ${semnC}${Math.abs(c)} = 0`;
+}
+</script>
+
+</body>
+</html>
