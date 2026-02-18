@@ -1,52 +1,104 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Calculator Geometrie Analitica</title>
+    <title>Calculator Geometrie - Proiectul Meu</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; background: #f4f4f9; }
-        .container { max-width: 500px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        input { width: 60px; margin: 5px; padding: 5px; }
-        button { padding: 10px 20px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; }
-        #rezultat { margin-top: 20px; font-weight: bold; color: #333; }
+        body { font-family: 'Segoe UI', sans-serif; padding: 20px; background: #f0f2f5; display: flex; flex-direction: column; align-items: center; }
+        .container { max-width: 600px; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .input-group { margin-bottom: 15px; background: #f8f9fa; padding: 10px; border-radius: 8px; }
+        input { width: 50px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; margin: 0 5px; }
+        button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px; }
+        button:hover { background: #0056b3; }
+        #rezultat { margin-top: 20px; padding: 15px; border-left: 5px solid #007bff; background: #e9ecef; font-family: monospace; }
+        canvas { border: 2px solid #333; border-radius: 8px; margin-top: 20px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { color: #333; margin-top: 0; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>1. Ecuația Dreptei</h2>
-    <p>Introdu coordonatele punctelor:</p>
+    <h2>📐 Geometrie Analitică</h2>
     
-    A: x1 <input type="number" id="x1" value="1"> y1 <input type="number" id="y1" value="2"><br>
-    B: x2 <input type="number" id="x2" value="3"> y2 <input type="number" id="y2" value="5"><br><br>
-    
-    <button onclick="calculeazaDreapta()">Calculează Ecuația</button>
+    <div class="input-group">
+        <strong>Punctul A:</strong> 
+        x <input type="number" id="x1" value="2"> 
+        y <input type="number" id="y1" value="3">
+    </div>
 
-    <div id="rezultat"></div>
+    <div class="input-group">
+        <strong>Punctul B:</strong> 
+        x <input type="number" id="x2" value="-4"> 
+        y <input type="number" id="y2" value="-2">
+    </div>
+    
+    <button onclick="calculeazaSiDeseneaza()">Calculează și Afișează Grafic</button>
+
+    <div id="rezultat">Ecuația va apărea aici...</div>
+    
+    <canvas id="grafic" width="400" height="400"></canvas>
 </div>
 
 <script>
-function calculeazaDreapta() {
-    // Luam valorile din input-uri
+function calculeazaSiDeseneaza() {
+    // 1. Preluăm datele
     let x1 = parseFloat(document.getElementById('x1').value);
     let y1 = parseFloat(document.getElementById('y1').value);
     let x2 = parseFloat(document.getElementById('x2').value);
     let y2 = parseFloat(document.getElementById('y2').value);
 
-    // Calculam coeficientii a, b, c conform formulei de mai sus
+    // 2. Calculăm ecuația dreptei: (y1-y2)x + (x2-x1)y + (x1y2 - x2y1) = 0
     let a = y1 - y2;
     let b = x2 - x1;
     let c = x1 * y2 - x2 * y1;
 
-    // Formatam afisarea (sa nu apara +- daca e negativ)
     let semnB = b >= 0 ? "+ " : "- ";
     let semnC = c >= 0 ? "+ " : "- ";
-
     document.getElementById('rezultat').innerHTML = 
-        `Ecuația dreptei este: ${a}x ${semnB}${Math.abs(b)}y ${semnC}${Math.abs(c)} = 0`;
+        `<strong>Ecuația:</strong> ${a}x ${semnB}${Math.abs(b)}y ${semnC}${Math.abs(c)} = 0`;
+
+    // 3. Desenăm pe Canvas
+    const canvas = document.getElementById('grafic');
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width;
+    const h = canvas.height;
+    const centru = w / 2;
+    const unitate = 30; // Câți pixeli are o unitate de măsură
+
+    // Curățăm canvas-ul
+    ctx.clearRect(0, 0, w, h);
+
+    // Desenăm axele de coordonate (Sistemul cartezian)
+    ctx.strokeStyle = "#ccc";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, centru); ctx.lineTo(w, centru); // Axa X
+    ctx.moveTo(centru, 0); ctx.lineTo(centru, h); // Axa Y
+    ctx.stroke();
+
+    // Desenăm dreapta (Segmentul AB)
+    ctx.strokeStyle = "#ff4757";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    // Atenție: y este cu minus pentru că pe ecran coordonatele cresc de sus în jos
+    ctx.moveTo(centru + x1 * unitate, centru - y1 * unitate);
+    ctx.lineTo(centru + x2 * unitate, centru - y2 * unitate);
+    ctx.stroke();
+
+    // Desenăm punctele A și B
+    ctx.fillStyle = "#2f3542";
+    ctx.beginPath();
+    ctx.arc(centru + x1 * unitate, centru - y1 * unitate, 5, 0, Math.PI * 2);
+    ctx.arc(centru + x2 * unitate, centru - y2 * unitate, 5, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Adăugăm etichete (A și B)
+    ctx.fillText(" A", centru + x1 * unitate + 5, centru - y1 * unitate - 5);
+    ctx.fillText(" B", centru + x2 * unitate + 5, centru - y2 * unitate - 5);
 }
+
+// Apelăm funcția o dată la început ca să nu fie ecranul gol
+calculeazaSiDeseneaza();
 </script>
 
 </body>
 </html>
-<canvas id="grafic" width="400" height="400" style="border:1px solid #ccc; margin-top:20px; background: white;"></canvas>
-
